@@ -18,12 +18,14 @@ const allowedOrigins = [
   'http://localhost:5174',                                          // Frontend local (vite)
   'https://vphone-pw2zoudi6-vphone24hs-projects.vercel.app',       // Frontend trên Vercel
   'https://iphone-inventory-frontend.vercel.app',                   // Frontend khác nếu có
+  'https://chinhthuc-jade.vercel.app',                             // Thêm domain frontend thực tế của bạn (để sửa lỗi CORS)
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
     // Cho phép các request không có origin (Postman, curl, mobile apps)
     if (!origin) return callback(null, true);
+
     if (!allowedOrigins.includes(origin)) {
       const msg = '❌ CORS bị chặn: ' + origin;
       return callback(new Error(msg), false);
