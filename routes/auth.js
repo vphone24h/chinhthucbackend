@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
     await User.create({
       email,
       password: hashed,
-      role: 'user' // Không còn approved nữa
+      role: 'user'
     });
 
     res.status(201).json({ message: '✅ Tạo tài khoản thành công' });
@@ -37,6 +37,10 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: '❌ Email và mật khẩu là bắt buộc' });
+    }
 
     const user = await User.findOne({ email });
     if (!user) {
