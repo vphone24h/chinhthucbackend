@@ -15,14 +15,14 @@ const app = express();
 
 // Danh sách origin frontend được phép truy cập API backend
 const allowedOrigins = [
-  'http://localhost:5174',
-  'https://vphone-pw2zoudi6-vphone24hs-projects.vercel.app',
-  'https://iphone-inventory-frontend.vercel.app',
+  'http://localhost:5174',                                          // Frontend local (vite)
+  'https://vphone-pw2zoudi6-vphone24hs-projects.vercel.app',       // Frontend trên Vercel
+  'https://iphone-inventory-frontend.vercel.app',                   // Frontend khác nếu có
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Cho phép các request không có origin (Postman, mobile apps)
+    // Cho phép các request không có origin (Postman, curl, mobile apps)
     if (!origin) return callback(null, true);
     if (!allowedOrigins.includes(origin)) {
       const msg = '❌ CORS bị chặn: ' + origin;
@@ -352,6 +352,7 @@ app.get('/', (req, res) => {
   res.send('🎉 Backend đang chạy!');
 });
 
-app.listen(4000, () => {
-  console.log('🚀 Server đang chạy tại http://localhost:4000');
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
 });
