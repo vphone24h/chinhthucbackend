@@ -5,20 +5,20 @@ require('dotenv').config();
 
 const Inventory = require('./models/Inventory');
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');          // <-- Giữ import user routes
+const userRoutes = require('./routes/user');
 const reportRoutes = require('./routes/report');
 const branchRoutes = require('./routes/branch');
 const categoryRoutes = require('./routes/category');
 const congNoRoutes = require('./routes/congno');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
 // Danh sách origin frontend được phép truy cập API backend
 const allowedOrigins = [
   'http://localhost:5174',
-  'https://chinhthuc-jade.vercel.app',  // Thêm domain này
+  'https://chinhthuc-jade.vercel.app',
 ];
-
 
 app.use(cors({
   origin: function(origin, callback) {
@@ -30,23 +30,22 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  credentials: true, // Cho phép gửi cookie, header authorization
+  credentials: true,
 }));
 
 app.options('*', cors());
 app.use(express.json());
 
-// ===== Đăng ký các route API =====
+// Đăng ký các route API
+app.use('/api', adminRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);                     // <-- Giữ user routes
+app.use('/api/user', userRoutes);
 app.use('/api/report', reportRoutes);
-
 app.use('/api/branches', branchRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/cong-no', congNoRoutes);
-// app.use('/api/admin', adminRoutes);                 // <-- Bỏ route admin
 
-// ===== API nhập hàng =====
+// API nhập hàng
 app.post('/api/nhap-hang', async (req, res) => {
   try {
     const {
@@ -135,7 +134,7 @@ app.post('/api/nhap-hang', async (req, res) => {
   }
 });
 
-// ===== API sửa hàng =====
+// API sửa hàng
 app.put('/api/nhap-hang/:id', async (req, res) => {
   try {
     const updatedItem = await Inventory.findByIdAndUpdate(
@@ -158,7 +157,7 @@ app.put('/api/nhap-hang/:id', async (req, res) => {
   }
 });
 
-// ===== API xoá hàng =====
+// API xoá hàng
 app.delete('/api/nhap-hang/:id', async (req, res) => {
   try {
     const deletedItem = await Inventory.findByIdAndDelete(req.params.id);
@@ -177,7 +176,7 @@ app.delete('/api/nhap-hang/:id', async (req, res) => {
   }
 });
 
-// ===== API xuất hàng =====
+// API xuất hàng
 app.post('/api/xuat-hang', async (req, res) => {
   try {
     const {
@@ -232,7 +231,7 @@ app.post('/api/xuat-hang', async (req, res) => {
   }
 });
 
-// ===== API tồn kho =====
+// API tồn kho
 app.get('/api/ton-kho', async (req, res) => {
   try {
     const items = await Inventory.find({ status: 'in_stock' });
@@ -248,7 +247,7 @@ app.get('/api/ton-kho', async (req, res) => {
   }
 });
 
-// ===== API cảnh báo tồn kho =====
+// API cảnh báo tồn kho
 app.get('/api/canh-bao-ton-kho', async (req, res) => {
   try {
     const items = await Inventory.find({ status: 'in_stock' });
@@ -288,7 +287,7 @@ app.get('/api/canh-bao-ton-kho', async (req, res) => {
   }
 });
 
-// ===== API danh sách xuất hàng =====
+// API danh sách xuất hàng
 app.get('/api/xuat-hang-list', async (req, res) => {
   try {
     const items = await Inventory.find({ status: 'sold' }).sort({ sold_date: -1 });
@@ -352,6 +351,7 @@ app.get('/', (req, res) => {
   res.send('🎉 Backend đang chạy!');
 });
 
-app.listen(4000, () => {
-  console.log('🚀 Server đang chạy tại http://localhost:4000');
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server đang chạy tại http://localhost:${PORT}`);
 });
