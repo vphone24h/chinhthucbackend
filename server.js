@@ -15,10 +15,10 @@ const app = express();
 
 // Danh sách domain frontend được phép truy cập backend
 const allowedOrigins = [
-  'http://localhost:5174', // Local Vite dev server
+  'http://localhost:5174',
   'https://vphone-pw2zoudi6-vphone24hs-projects.vercel.app',
   'https://iphone-inventory-frontend.vercel.app',
-  'https://chinhthuc-jade.vercel.app', // Thêm domain frontend của bạn
+  'https://chinhthuc-jade.vercel.app',  // Thêm domain này
 ];
 
 // Cấu hình CORS
