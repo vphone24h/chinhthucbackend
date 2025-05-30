@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const Admin = require('../models/Admin'); // chắc bạn có model Admin
+const Admin = require('../models/Admin');
 
 const router = express.Router();
 
@@ -13,17 +12,20 @@ router.post('/admin-register', async (req, res) => {
       return res.status(400).json({ message: 'Email và mật khẩu là bắt buộc' });
     }
 
+    // Kiểm tra email đã tồn tại chưa
     const existingAdmin = await Admin.findOne({ email });
     if (existingAdmin) {
       return res.status(400).json({ message: 'Email đã tồn tại' });
     }
 
+    // Hash mật khẩu
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Tạo admin mới, không có trạng thái xét duyệt gì hết
     const newAdmin = new Admin({
       email,
       password: hashedPassword,
-      role: 'admin'
+      role: 'admin'  // hoặc role khác tùy bạn
     });
 
     await newAdmin.save();
