@@ -29,10 +29,12 @@ function BaoCao() {
   // Gọi API lấy dữ liệu báo cáo
   const fetchData = async (fromDate, toDate, branch) => {
     try {
-      let api = `${import.meta.env.VITE_API_URL}/api/bao-cao-loi-nhuan`;
+      // Loại bỏ dấu / cuối nếu có để không bị lỗi //
+      let api = `${import.meta.env.VITE_API_URL.replace(/\/$/, "")}/api/bao-cao-loi-nhuan`;
       if (fromDate && toDate) {
         api += `?from=${fromDate}&to=${toDate}&branch=${branch}`;
       }
+      console.log("Gọi API:", api); // Log URL gọi API để kiểm tra nếu lỗi
       const res = await fetch(api);
       const json = await res.json();
       console.log("Dữ liệu báo cáo trả về:", json); // DEBUG XEM API TRẢ VỀ
@@ -53,6 +55,7 @@ function BaoCao() {
       setTo(toDate);
       fetchData(fromDate, toDate, branch);
     }
+    // eslint-disable-next-line
   }, [filter, branch]);
 
   // Khi chọn filter "Tùy chọn", nhấn áp dụng sẽ chạy hàm này
