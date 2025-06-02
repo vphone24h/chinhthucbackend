@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import * as jwt_decode from "jwt-decode";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -29,9 +28,12 @@ function Login() {
 
       if (res.ok) {
         alert("✅ Đăng nhập thành công");
-        localStorage.setItem("token", data.token);
 
-       const decoded = jwt_decode(data.token);
+        if (remember) {
+          localStorage.setItem("token", data.token);
+        } else {
+          sessionStorage.setItem("token", data.token);
+        }
 
         navigate("/nhap-hang");
       } else {
@@ -61,6 +63,7 @@ function Login() {
           minWidth: 380,
           maxWidth: 400,
           boxShadow: "0 8px 32px #0002",
+          color: "#fff",
         }}
       >
         <div
@@ -68,7 +71,6 @@ function Login() {
             textAlign: "center",
             fontSize: 22,
             fontWeight: 700,
-            color: "#fff",
             marginBottom: 32,
           }}
         >
@@ -79,7 +81,6 @@ function Login() {
           <div style={{ marginBottom: 15 }}>
             <label
               style={{
-                color: "#fff",
                 display: "block",
                 marginBottom: 6,
                 fontWeight: 600,
@@ -108,7 +109,6 @@ function Login() {
           <div style={{ marginBottom: 15 }}>
             <label
               style={{
-                color: "#fff",
                 display: "block",
                 marginBottom: 6,
                 fontWeight: 600,
@@ -138,14 +138,14 @@ function Login() {
               alignItems: "center",
               justifyContent: "space-between",
               marginBottom: 20,
+              color: "#ccc",
+              fontSize: 15,
             }}
           >
             <label
               style={{
-                color: "#ccc",
                 display: "flex",
                 alignItems: "center",
-                fontSize: 15,
               }}
             >
               <input
@@ -158,7 +158,7 @@ function Login() {
             </label>
             <Link
               to="/quen-mat-khau"
-              style={{ color: "#33aaff", fontSize: 15, textDecoration: "none" }}
+              style={{ color: "#33aaff", textDecoration: "none" }}
             >
               Quên mật khẩu?
             </Link>
@@ -174,9 +174,13 @@ function Login() {
               borderRadius: 6,
               padding: "14px 0",
               fontSize: 18,
-              marginBottom: 18,
+              margin: "18px 0",
               cursor: "pointer",
               letterSpacing: 1,
+              boxSizing: "border-box",
+              display: "flex",
+              justifyContent: "center",
+              textAlign: "center",
             }}
           >
             ĐĂNG NHẬP
@@ -186,7 +190,10 @@ function Login() {
         <div style={{ textAlign: "center", marginTop: 10 }}>
           <span style={{ color: "#aaa", fontSize: 15 }}>
             Chưa có tài khoản?{" "}
-            <Link to="/dang-ky" style={{ color: "#2196f3", textDecoration: "underline" }}>
+            <Link
+              to="/dang-ky"
+              style={{ color: "#2196f3", textDecoration: "underline" }}
+            >
               Đăng ký ngay
             </Link>
           </span>
@@ -197,4 +204,3 @@ function Login() {
 }
 
 export default Login;
-
